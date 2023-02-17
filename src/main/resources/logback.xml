@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <variable name="test" value="true"/>
+
+    <if condition='isDefined("test")'>
+        <appender name="SIFT" class="ch.qos.logback.classic.sift.SiftingAppender">
+            <discriminator>
+                <key>logCategory</key>
+                <defaultValue>unknown</defaultValue>
+            </discriminator>
+            <sift>
+                <appender name="FILE-${logCategory}" class="ch.qos.logback.core.FileAppender">
+                    <file>logs/category-${logCategory}.log</file>
+                    <encoder>
+                        <pattern>%d [%X{logCategory}] %msg%n</pattern>
+                    </encoder>
+                </appender>
+            </sift>
+        </appender>
+        <logger name="com.github.sebphil.Application" level="INFO" additivity="false">
+            <appender-ref ref="SIFT"/>
+        </logger>
+    </if>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d [%X{logCategory}] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="DEBUG">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+</configuration>
